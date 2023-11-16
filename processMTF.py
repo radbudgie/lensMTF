@@ -5,12 +5,12 @@ import pandas as pd
 import glob
 import exifread
 ## fill this in to crawl a director
-files = glob.glob(r"../../../Pictures/FUJIFILM/10-24 10mm/*.tif")
+files = glob.glob(r"../../../Pictures/FUJIFILM/10-24 16mm/**/*.tif", recursive=True)
 
 extract_window = 40
 line_window = 32
 pts_to_analyze = 5
-output_file = "out_ref.csv"
+output_file = "out_ref_16.csv"
 def tellme(s):
     print(s)
     plt.title(s, fontsize=16)
@@ -46,6 +46,7 @@ for jj, filename in enumerate(files):
                 p.remove()
         plt.close()
         print(coords)
+        
     MTFs = []
     for ii in range(pts_to_analyze):
         sub_im = im[
