@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import pandas as pd
 import glob
+import exifread
 ## fill this in to crawl a director
 files = glob.glob(r"../../../Pictures/FUJIFILM/10-24 10mm/*.tif")
 
@@ -17,6 +18,15 @@ def tellme(s):
 output_summary = []
 coords = []
 for jj, filename in enumerate(files):
+    with open(filename, 'rb') as f:
+        tags = exifread.process_file(f)
+        f_no = tags['EXIF FNumber'].values[0]
+        f_no = float(f_no)
+
+
+        lens_name = tags["EXIF LensModel"]
+        focal_length = float(tags["EXIF FocalLength"].values[0])
+    print(f_no, lens_name, focal_length)
     print(filename)
     im = matplotlib.image.imread(filename).astype(float)
     im /= np.max(im.astype(float))
@@ -81,7 +91,10 @@ for jj, filename in enumerate(files):
                 "MTF0.5": MTFs[ii][2],
                 "x_coord": coords[ii][0],
                 "y_coord": coords[ii][1],
-                "index": ii,
+                "meas_index": ii,
+                "f_no": f_no,
+                "focal_length": focal_length,
+                "lens_name": lens_name,
                 
             }
         )
